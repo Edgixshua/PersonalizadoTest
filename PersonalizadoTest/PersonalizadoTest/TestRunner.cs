@@ -17,7 +17,8 @@ namespace PersonalizadoTest
 
             foreach (var testClass in testClasses)
             {
-                var testMethods = testClass.GetMethods().Where(method => method.CustomAttributes.Any(attribute => attribute.AttributeType == typeof(PersonalizadoTestMethod)));
+                var methods = testClass.GetMethods();
+                var testMethods = GetTestMethods(methods);
 
                 if (testMethods.Any())
                 {
@@ -57,5 +58,8 @@ namespace PersonalizadoTest
         private static IEnumerable<Type> GetTestClasses(IEnumerable<Type> classes)
             => classes.Where(type => type.IsClass && 
                type.CustomAttributes.Any(attribute => attribute.AttributeType == typeof(PersonalizadoTestClass)));
+
+        private static IEnumerable<MethodInfo> GetTestMethods(IEnumerable<MethodInfo> methods)
+            => methods.Where(method => method.CustomAttributes.Any(attribute => attribute.AttributeType == typeof(PersonalizadoTestMethod)));
     }
 }

@@ -19,5 +19,20 @@ namespace CalculatorTests
             // Assert
             Assert.AreEqual(expectedNumber, actualNumber);
         }
+
+        [PersonalizadoTestMethod]
+        public void SubtractingOne_FromTwo_ProducesOne()
+        {
+            // Arrange
+            const int expectedNumber = 1;
+            const int numberOne = 2;
+            const int numberTwo = 1;
+
+            // Act
+            var actualNumber = Calculator.Methods.Subtract(numberOne, numberTwo);
+
+            // Assert
+            Assert.AreEqual(expectedNumber, actualNumber);
+        }
     }
 }

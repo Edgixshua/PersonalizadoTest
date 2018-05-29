@@ -7,11 +7,11 @@ namespace Calculator
     {
         static void Main(string[] args)
         {
-            var testResults = TestRunner.RunTestSuite("");
+            var testResults = TestRunner.RunTestSuite(@"");
 
             foreach (var result in testResults)
             {
-                Console.WriteLine($"{result.TestName}: {result.Passed} ({result.Message})");
+                Console.WriteLine($"{result.TestName}: {result.Passed} | {result.Message}");
             }
         }
     }

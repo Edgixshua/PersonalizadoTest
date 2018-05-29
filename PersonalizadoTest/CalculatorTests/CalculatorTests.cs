@@ -5,6 +5,7 @@ namespace CalculatorTests
     [PersonalizadoTestClass]
     public class CalculatorTests
     {
+        [PersonalizadoTestMethod]
         public void AddingTwoNumbers_OneAndTwo_ProducesThree()
         {
             // Arrange

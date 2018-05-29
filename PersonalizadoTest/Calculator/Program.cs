@@ -7,7 +7,7 @@ namespace Calculator
     {
         static void Main(string[] args)
         {
-            var testResults = TestRunner.RunTestSuite(@"C:\Users\joshuas\source\repos\PersonalizadoTest\PersonalizadoTest\CalculatorTests\bin\Debug\netstandard2.0\CalculatorTests.dll");
+            var testResults = TestRunner.RunTestSuite("");
 
             foreach (var result in testResults)
             {

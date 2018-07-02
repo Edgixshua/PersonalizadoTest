@@ -72,7 +72,19 @@ public class TestInformation
     }
 ```
 
-This allows us to store the name of the test, whether it passed and the message it output. We can then add these to a list which is returned at the end of the test run. In terms of running the tests, we need the test project assembly information first before proceeding which is where the Reflection library comes in:
+This allows us to store the name of the test, whether it passed and the message it output. We can then add these to a list which is returned at the end of the test run. I then also created a custom test exception to throw when one of our custom tests fails:
+
+```
+public class TestException : Exception
+    {
+        public TestException(string message)
+            : base(message)
+        { 
+        }
+    }
+```
+
+In terms of running the tests, we need the test project assembly information first before proceeding which is where the Reflection library comes in:
 
 https://msdn.microsoft.com/en-us/library/system.reflection(v=vs.110).aspx
 
@@ -84,7 +96,7 @@ var assembly = Assembly.LoadFrom(path);
             var testClasses = GetTestClasses(types);
 ```
 
-pull out the test classes and methods by searching for our custom test attribute:
+Then pull out the test classes and methods by searching for our custom test attribute:
 
 ```
 private static IEnumerable<Type> GetTestClasses(IEnumerable<Type> classes)
@@ -95,3 +107,45 @@ private static IEnumerable<MethodInfo> GetTestMethods(IEnumerable<MethodInfo> me
     => methods.Where(method => method.CustomAttributes.Any(attribute => attribute.AttributeType == typeof(PersonalizadoTestMethod)));
 ```
 
+Finally, to actually the run the test methods I created a new instance of each of the test classes and then ran each test method contained within, making sure to populate `TestInformation` objects as the run proceeds:
+
+```
+foreach (var testClass in testClasses)
+            {
+                var methods = testClass.GetMethods();
+                var testMethods = GetTestMethods(methods);
+
+                if (testMethods.Any())
+                {
+                    var testClassInstance = Activator.CreateInstance(testClass);
+
+                    foreach (var testMethod in testMethods)
+                    {
+                        var testInformation = new TestInformation
+                        {
+                            TestName = $"{testClass.Name}.{testMethod.Name}"
+                        };
+
+                        try
+                        {
+                            testMethod.Invoke(testClassInstance, null);
+                            testInformation.Passed = true;
+                        }
+                        catch (TestException exception)
+                        {
+                            testInformation.Passed = false;
+                            testInformation.Message = exception.Message;
+                        }
+                        catch (Exception exception)
+                        {
+                            testInformation.Passed = false;
+                            testInformation.Message = $"{exception.GetType()}:{exception.Message}";
+                        }
+
+                        testResults.Add(testInformation);
+                    }
+                }
+            }
+
+            return testResults;
+```

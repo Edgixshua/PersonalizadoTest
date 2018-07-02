@@ -15,14 +15,16 @@ Consider how this is done in MSTest:
 
 This marks the classes and methods with this attribute as test classes and methods, making it easy to identify them for a test run. We can use the same concept for our own test framework by creating some custom attributes:
 
-```public class CustomTestClass : Attribute
+```
+public class CustomTestClass : Attribute
 {
 
 }
 ```
 
 
-```public class CustomTestMethod : Attribute
+```
+public class CustomTestMethod : Attribute
 {
 
 }
@@ -40,7 +42,8 @@ https://msdn.microsoft.com/en-us/library/microsoft.visualstudio.testtools.unitte
 
 We can again use the same principles for our own test framework by creating a custom assertion static class which will hold all of our assertion methods. For now let's create a basic IsTrue assertion method:
 
-```public static class CustomAssert
+```
+public static class CustomAssert
 {
     public static void IsTrue(bool expression)
     {
